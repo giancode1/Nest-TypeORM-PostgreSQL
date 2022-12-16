@@ -16,6 +16,8 @@ export class Product {
   // no es number para postgre
   @Column('numeric', {
     default: 0,
+    // precision: 5,
+    // scale: 3,
   })
   price: number;
 
