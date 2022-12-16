@@ -5,11 +5,45 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   // ! no todos los tipos de datos q me muestra, estan soportados por postgres, aca estan de todos: mysql, mongo, ...
   @Column('text', {
     unique: true,
   })
   title: string;
+
+  // no es number para postgre
+  @Column('numeric', {
+    default: 0,
+  })
+  price: number;
+
+  @Column({
+    type: 'text', // otra forma, tambn puedes definir aca el tipo
+    nullable: true,
+  })
+  description: string;
+
+  // el slug debe ser unico, para este caso me servira para tener url friendly
+  @Column('text', {
+    unique: true,
+  })
+  slug: string; // no 2 slug iguales porq no hay 2 productos iguales, tambn se pueden crear indices pero unique tambn crea un indice por mi
+
+  @Column('int', {
+    default: 0,
+  })
+  stock: number;
+
+  @Column('text', {
+    array: true,
+  })
+  sizes: string[];
+
+  @Column('text')
+  gender: string; // generos
+
+  //TAGS
+  //IMAGES
 }
