@@ -1,11 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  // Patron Repositorio
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+  ) {}
+  // productRepository me sirve para insertar, query builders, transacciones, roolbacks y mas
+
+  async create(createProductDto: CreateProductDto) {
+    try {
+      const product = this.productRepository.create(createProductDto); // hay 3 formas para hacer el create()
+      await this.productRepository.save(product);
+
+      return product;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('!Ayuda');
+    }
   }
 
   findAll() {

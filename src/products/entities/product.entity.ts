@@ -14,7 +14,7 @@ export class Product {
   title: string;
 
   // no es number para postgre
-  @Column('numeric', {
+  @Column('float', {
     default: 0,
     // precision: 5,
     // scale: 3,
@@ -29,7 +29,7 @@ export class Product {
 
   // el slug debe ser unico, para este caso me servira para tener url friendly
   @Column('text', {
-    unique: true,
+    unique: true, // * único, por lo tanto no debe ser null, entoncs es obligatorio que tenga valor
   })
   slug: string; // no 2 slug iguales porq no hay 2 productos iguales, tambn se pueden crear indices pero unique tambn crea un indice por mi
 
