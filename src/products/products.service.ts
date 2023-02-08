@@ -24,6 +24,17 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto) {
     try {
+      // if (!createProductDto.slug) {
+      //   createProductDto.slug = createProductDto.title
+      //     .toLowerCase()
+      //     .replaceAll(' ', '_')
+      //     .replaceAll("'", '_');
+      // } else {
+      //   createProductDto.slug = createProductDto.slug
+      //     .toLowerCase()
+      //     .replaceAll(' ', '_')
+      //     .replaceAll("'", '_');
+      // }
       const product = this.productRepository.create(createProductDto); // hay 3 formas para hacer el create()
       await this.productRepository.save(product);
 

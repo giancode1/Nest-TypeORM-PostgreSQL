@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // Recuerda el entity es una representacion de esta clase en la db, es como la tabla
 // * recuerda configuramos autoLoadEntities y synchronize en true, inmediatamente lo sincroniza con la db todo lo q estoy poniendo abajo:
@@ -48,4 +48,19 @@ export class Product {
 
   //TAGS
   //IMAGES
+
+  @BeforeInsert()
+  checkSlugInsert() {
+    // si no existe el slug:
+    if (!this.slug) {
+      this.slug = this.title;
+    }
+
+    this.slug = this.slug
+      .toLowerCase()
+      .replaceAll(' ', '_')
+      .replaceAll("'", '_');
+  }
+
+  // @BeforeUpdate()
 }
