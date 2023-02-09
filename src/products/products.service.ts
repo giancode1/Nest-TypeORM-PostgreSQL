@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -24,44 +25,36 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto) {
     try {
-      // if (!createProductDto.slug) {
-      //   createProductDto.slug = createProductDto.title
-      //     .toLowerCase()
-      //     .replaceAll(' ', '_')
-      //     .replaceAll("'", '_');
-      // } else {
-      //   createProductDto.slug = createProductDto.slug
-      //     .toLowerCase()
-      //     .replaceAll(' ', '_')
-      //     .replaceAll("'", '_');
-      // }
       const product = this.productRepository.create(createProductDto); // hay 3 formas para hacer el create()
       await this.productRepository.save(product);
 
       return product;
     } catch (error) {
-      // console.log(error);  // no se visualiza rapidamente el error
-
-      //this.logger.error(error); // mas fácil ver el error
-      // throw new InternalServerErrorException('!Ayuda');
       this.handleDBExceptions(error);
     }
   }
 
+  // TODO: paginar
   findAll() {
-    return `This action returns all products`;
+    return this.productRepository.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string) {
+    const product = await this.productRepository.findOneBy({ id });
+
+    if (!product)
+      throw new NotFoundException(`Product with id ${id} not found`);
+
+    return product;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    const product = await this.findOne(id);
+    await this.productRepository.remove(product);
   }
 
   private handleDBExceptions(error: any) {
