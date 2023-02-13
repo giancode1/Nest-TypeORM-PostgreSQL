@@ -1,4 +1,10 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 // Recuerda el entity es una representacion de esta clase en la db, es como la tabla
 // * recuerda configuramos autoLoadEntities y synchronize en true, inmediatamente lo sincroniza con la db todo lo q estoy poniendo abajo:
@@ -62,5 +68,12 @@ export class Product {
       .replaceAll("'", '_');
   }
 
-  // @BeforeUpdate()
+  @BeforeUpdate()
+  checkSlugUpdate() {
+    this.slug = this.slug
+      .toLowerCase()
+      .replaceAll(' ', '_')
+      .replaceAll("'", '_');
+  }
+  // Before** aqui ahorra mucho codigo en product.service
 }
